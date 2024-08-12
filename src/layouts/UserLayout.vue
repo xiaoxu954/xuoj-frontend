@@ -1,8 +1,11 @@
 <template>
-  <div id="basiclayout">
+  <div id="userlayout">
     <a-layout style="min-height: 100vh">
       <a-layout-header class="header">
-        <GlobalHeader />
+        <a-space>
+          <img src="../assets/OJ-logo.jpg" class="logo" />
+          <div>小徐 OJ</div>
+        </a-space>
       </a-layout-header>
       <a-layout-content class="content">
         <router-view />
@@ -14,22 +17,27 @@
   </div>
 </template>
 <style scoped>
-#basiclayout {
-}
-
-#basiclayout .header {
-  margin-bottom: 16px;
-  box-shadow: #eee 1px 1px 5px;
-}
-
-#basiclayout .content {
+#userlayout {
+  text-align: center;
   background: url("../assets/bg.png") 0% 0% / 100% 100%;
+}
+
+#userlayout .logo {
+  width: 64px;
+  height: 64px;
+}
+
+#userlayout .header {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+#userlayout .content {
   margin-bottom: 16px;
   padding: 20px;
 }
 
-#basiclayout .footer {
-  background: #efefef;
+#userlayout .footer {
   padding: 16px;
   position: sticky;
   bottom: 0;
@@ -38,6 +46,4 @@
   text-align: center;
 }
 </style>
-<script setup lang="ts">
-import GlobalHeader from "@/components/GlobalHeader.vue";
-</script>
+<script setup lang="ts"></script>
