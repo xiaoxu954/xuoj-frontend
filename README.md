@@ -6,6 +6,12 @@
 npm install
 ```
 
+## 快速生成后端请求代码
+
+```
+openapi --input http://localhost:8101/api/v2/api-docs --output ./generated --client axios
+```
+
 ### Compiles and hot-reloads for development
 
 ```

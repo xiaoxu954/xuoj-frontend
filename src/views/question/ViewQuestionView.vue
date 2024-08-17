@@ -48,7 +48,7 @@
               :style="{ width: '320px' }"
               placeholder="选择编程语言"
             >
-              <a-option>c++</a-option>
+              <a-option>cpp</a-option>
               <a-option>java</a-option>
               <a-option>python</a-option>
               <a-option>go</a-option>
@@ -75,7 +75,6 @@ import { defineProps, onMounted, ref, withDefaults } from "vue";
 import {
   QuestionControllerService,
   QuestionSubmitAddRequest,
-  QuestionSubmitControllerService,
   QuestionVO,
 } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
@@ -116,7 +115,7 @@ const doSubmit = async () => {
     return;
   }
 
-  const res = await QuestionSubmitControllerService.doQuestionSubmitUsingPost({
+  const res = await QuestionControllerService.doQuestionSubmitUsingPost({
     ...form.value,
     questionId: question.value.id,
   });
