@@ -6,11 +6,69 @@ import UserLayout from "@/layouts/UserLayout.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
-import QuestionsView from "@/views/question/QuestionsView.vue";
 import QuestionsSubmitView from "@/views/question/QuestionsSubmitView.vue";
 import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import QuestionsView from "@/views/question/QuestionsView.vue";
+import UserManageView from "@/views/user/UserManageView.vue";
+import UserInfoView from "@/views/user/UserInfoView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/",
+    name: "首页",
+    component: QuestionsView,
+  },
+
+  {
+    path: "/manage/user",
+    name: "用户管理",
+    component: UserManageView,
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
+    },
+  },
+
+  {
+    path: "/question/add",
+    name: "创建题目",
+    component: AddQuestionView,
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
+    },
+  },
+  {
+    path: "/question/update",
+    name: "更新题目",
+    component: AddQuestionView,
+    meta: {
+      access: ACCESS_ENUM.USER,
+      hideInMenu: true,
+    },
+  },
+
+  {
+    path: "/question/manage",
+    name: "管理题目",
+    component: ManageQuestionView,
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
+    },
+  },
+  {
+    path: "/question_submit",
+    name: "浏览题目提交页",
+    component: QuestionsSubmitView,
+  },
+  {
+    path: "/question/view/:id",
+    name: "在线做题",
+    component: ViewQuestionView,
+    props: true, // 开启接收动态id
+    meta: {
+      access: ACCESS_ENUM.USER,
+      hideInMenu: true,
+    },
+  },
   {
     path: "/user",
     name: "用户",
@@ -26,63 +84,13 @@ export const routes: Array<RouteRecordRaw> = [
         name: "用户注册",
         component: UserRegisterView,
       },
+      {
+        path: "/user/info",
+        name: "用户信息",
+        component: UserInfoView,
+      },
     ],
     meta: {
-      hideInMenu: true,
-    },
-  },
-
-  {
-    path: "/add/question",
-    name: "创建题目",
-    component: AddQuestionView,
-    meta: {
-      access: ACCESS_ENUM.USER,
-    },
-  },
-  {
-    path: "/update/question",
-    name: "更新题目",
-    component: AddQuestionView,
-    meta: {
-      access: ACCESS_ENUM.USER,
-      hideInMenu: true,
-    },
-  },
-
-  {
-    path: "/manage/question",
-    name: "管理题目",
-    component: ManageQuestionView,
-    meta: {
-      access: ACCESS_ENUM.ADMIN,
-    },
-  },
-  {
-    path: "/",
-    name: "浏览题目",
-    component: QuestionsView,
-    meta: {
-      hideInMenu: true,
-    },
-  },
-  {
-    path: "/questions",
-    name: "浏览题目",
-    component: QuestionsView,
-  },
-  {
-    path: "/questions_submit",
-    name: "浏览题目提交页",
-    component: QuestionsSubmitView,
-  },
-  {
-    path: "/view/question/:id",
-    name: "在线做题",
-    component: ViewQuestionView,
-    props: true,
-    meta: {
-      access: ACCESS_ENUM.USER,
       hideInMenu: true,
     },
   },
@@ -94,6 +102,11 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       hideInMenu: true,
     },
+  },
+  {
+    path: "/introduce",
+    name: "OJ介绍",
+    component: () => import("../views/SystemIntroduceView.vue"),
   },
   // {
   //   path: "/hide",

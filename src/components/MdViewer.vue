@@ -6,7 +6,7 @@
 import gfm from "@bytemd/plugin-gfm";
 import highlight from "@bytemd/plugin-highlight";
 import { Viewer } from "@bytemd/vue-next";
-import { withDefaults, defineProps } from "vue";
+import { defineProps, withDefaults } from "vue";
 
 /**
  * 定义组件属性类型
@@ -29,4 +29,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 </script>
 
-<style></style>
+<style>
+:deep(.bytemd-fullscreen.bytemd) {
+  z-index: 100;
+}
+</style>

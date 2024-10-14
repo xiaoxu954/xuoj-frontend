@@ -22,9 +22,66 @@
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col flex="100px">
-        <div>{{ store.state.user?.loginUser?.userName ?? "未登录" }}</div>
-      </a-col>
+      <a-space size="large">
+        <a-dropdown trigger="hover">
+          <template
+            v-if="loginUser && loginUser.userRole !== AccessEnum.NOT_LOGIN"
+          >
+            <template v-if="loginUser.userAvatar">
+              <a-avatar shape="circle" :image-url="loginUser.userAvatar">
+              </a-avatar>
+            </template>
+            <template v-else>
+              <a-avatar shape="circle">
+                <IconUser />
+              </a-avatar>
+            </template>
+          </template>
+          <template v-else>
+            <a-avatar shape="circle" :style="{ backgroundColor: '#3370ff' }">
+              <IconUser />
+            </a-avatar>
+          </template>
+          <template #content>
+            <template v-if="loginUser.userRole !== AccessEnum.NOT_LOGIN">
+              <a-doption>
+                <template #icon>
+                  <icon-idcard />
+                </template>
+                <template #default>
+                  <a-anchor-link href="/user/info">个人信息</a-anchor-link>
+                </template>
+              </a-doption>
+              <a-doption>
+                <template #icon>
+                  <icon-poweroff />
+                </template>
+                <template #default>
+                  <a-anchor-link @click="logout">退出登录</a-anchor-link>
+                </template>
+              </a-doption>
+            </template>
+            <template v-else>
+              <a-doption>
+                <template #icon>
+                  <icon-user />
+                </template>
+                <template #default>
+                  <a-anchor-link href="/user/login">登录</a-anchor-link>
+                </template>
+              </a-doption>
+              <a-doption>
+                <template #icon>
+                  <icon-user />
+                </template>
+                <template #default>
+                  <a-anchor-link href="/user/register">注册</a-anchor-link>
+                </template>
+              </a-doption>
+            </template>
+          </template>
+        </a-dropdown>
+      </a-space>
     </a-row>
   </div>
 </template>
@@ -36,6 +93,7 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "@/access/checkAccess";
 import AccessEnum from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
 
 const router = useRouter();
 const store = useStore();
@@ -60,6 +118,12 @@ const visibleRoutes = computed(() => {
 //默认主页
 const selectKeys = ref(["/"]);
 
+// 用户注销
+const logout = () => {
+  UserControllerService.userLogoutUsingPost();
+  location.reload();
+};
+
 //路由跳转时 更新选中的菜单项
 router.afterEach((to, from, failure) => {
   selectKeys.value = [to.path];
@@ -67,8 +131,10 @@ router.afterEach((to, from, failure) => {
 
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
-    userName: "xiaoxu",
-    userRole: AccessEnum.ADMIN,
+    // userName: "xiaoxu",
+    // userRole: AccessEnum.ADMIN,
+    userName: loginUser.userName,
+    userRole: loginUser.userRole,
   });
 }, 3000);
 

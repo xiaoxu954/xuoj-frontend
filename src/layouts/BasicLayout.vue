@@ -23,7 +23,7 @@
 }
 
 #basiclayout .content {
-  background: url("../assets/bg.png") 0% 0% / 100% 100%;
+  //background: url("../assets/bg.png") 0% 0% / 100% 100%;
   margin-bottom: 16px;
   padding: 20px;
 }

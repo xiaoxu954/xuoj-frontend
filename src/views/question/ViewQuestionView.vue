@@ -6,16 +6,16 @@
           <a-tab-pane key="question" title="题目">
             <a-card v-if="question" :title="question.title">
               <a-descriptions
-                title="判题条件"
+                title="判题条件:"
                 :column="{ xs: 1, md: 2, lg: 3 }"
               >
-                <a-descriptions-item label="时间限制">
+                <a-descriptions-item label="时间限制（ms）：">
                   {{ question.judgeConfig.timeLimit ?? 0 }}
                 </a-descriptions-item>
-                <a-descriptions-item label="内存限制">
+                <a-descriptions-item label="内存限制（KB）：">
                   {{ question.judgeConfig.memoryLimit ?? 0 }}
                 </a-descriptions-item>
-                <a-descriptions-item label="堆栈限制">
+                <a-descriptions-item label="堆栈限制（KB）：">
                   {{ question.judgeConfig.stackLimit ?? 0 }}
                 </a-descriptions-item>
               </a-descriptions>
@@ -33,36 +33,35 @@
             </a-card>
           </a-tab-pane>
           <a-tab-pane key="comment" title="评论" disabled> 评论区</a-tab-pane>
-          <a-tab-pane key="answer" title="答案"> 暂时无法查看答案</a-tab-pane>
+          <a-tab-pane key="answer" title="答案"> 提交后方可查看答案</a-tab-pane>
         </a-tabs>
       </a-col>
       <a-col :md="12" :xs="24">
         <a-form :model="form" layout="inline">
           <a-form-item
             field="language"
-            label="编程语言"
+            label="编程语言："
             style="min-width: 240px"
           >
-            <a-select
-              v-model="form.language"
-              :style="{ width: '320px' }"
-              placeholder="选择编程语言"
-            >
-              <a-option>cpp</a-option>
+            <a-select v-model="form.language" placeholder="选择编程语言">
               <a-option>java</a-option>
-              <a-option>python</a-option>
-              <a-option>go</a-option>
-              <a-option>html</a-option>
+              <a-option disabled>敬请期待更多语言</a-option>
             </a-select>
           </a-form-item>
         </a-form>
         <CodeEditor
-          :value="form.code as string"
           :language="form.language"
+          :value="form.code"
           :handle-change="changeCode"
         />
         <a-divider size="0" />
-        <a-button type="primary" style="min-width: 200px" @click="doSubmit">
+        <a-button
+          shape="round"
+          type="primary"
+          style="min-width: 200px; margin-left: 280px"
+          size="large"
+          @click="doSubmit"
+        >
           提交代码
         </a-button>
       </a-col>
@@ -85,6 +84,9 @@ interface Props {
   id: string;
 }
 
+/**
+ * 获取到动态路由 id
+ */
 const props = withDefaults(defineProps<Props>(), {
   id: () => "",
 });
@@ -102,9 +104,22 @@ const loadData = async () => {
   }
 };
 
+/**
+ * 不同语言的默认程序
+ */
+const codeDefaultValue = ref(
+  "public class Main {\n" +
+    "    public static void main(String[] args) {\n" +
+    "        int a = Integer.parseInt(args[0]);\n" +
+    "        int b = Integer.parseInt(args[1]);\n" +
+    "        System.out.println(a + b);\n" +
+    "    }\n" +
+    "}\n"
+);
+
 const form = ref<QuestionSubmitAddRequest>({
   language: "java",
-  code: "",
+  code: codeDefaultValue as unknown as string,
 });
 
 /**
@@ -120,7 +135,7 @@ const doSubmit = async () => {
     questionId: question.value.id,
   });
   if (res.code === 0) {
-    message.success("提交成功");
+    message.success("提交成功，请到已提交题目界面查看");
   } else {
     message.error("提交失败," + res.message);
   }
@@ -140,8 +155,10 @@ const changeCode = (value: string) => {
 
 <style>
 #viewQuestionView {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
+  box-shadow: 0px 0px 10px rgba(35, 7, 7, 0.21);
+  border-radius: 10px;
 }
 
 #viewQuestionView .arco-space-horizontal .arco-space-item {
