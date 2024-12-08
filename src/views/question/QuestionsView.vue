@@ -8,12 +8,12 @@
         field="tags"
         label="题目标签："
         tooltip="请输入搜索题目标签"
-        style="min-width: 280px"
+        style="min-width: 300px"
       >
         <a-input-tag v-model="searchParams.tags" placeholder="请输入题目标签" />
       </a-form-item>
       <a-form-item>
-        <a-button type="outline" shape="round" status="normal" @click="doSubmit"
+        <a-button type="outline" status="normal" @click="doSubmit"
           >搜索
         </a-button>
       </a-form-item>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect } from "vue";
+import { computed, onMounted, ref, watchEffect } from "vue";
 import {
   Question,
   QuestionControllerService,
@@ -87,6 +87,8 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import store from "@/store";
+import ACCESS_ENUM from "@/access/accessEnum";
 
 const tableRef = ref();
 
@@ -190,6 +192,11 @@ const router = useRouter();
  * @param question
  */
 const toQuestionPage = (question: Question) => {
+  const loginUser = computed(() => store.state.user.loginUser);
+  //如果用户不存在
+  if (!loginUser.value || loginUser.value.userRole === ACCESS_ENUM.NOT_LOGIN) {
+    message.error("未登录，请先登录");
+  }
   router.push({
     path: `/question/view/${question.id}`,
   });
@@ -211,6 +218,6 @@ const doSubmit = () => {
 #questionsView {
   max-width: 1280px;
   margin: 0 auto;
-  border-radius: 10px;
+  padding: 2px;
 }
 </style>

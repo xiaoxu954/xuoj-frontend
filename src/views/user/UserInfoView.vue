@@ -46,16 +46,28 @@
         :model="loginUser"
         label-align="right"
         title="个人信息"
-        style="max-width: 480px; margin: 0 auto"
+        style="max-width: 1200px; margin: 0 auto"
       >
-        <a-form-item field="用户名称" label="账号 :">
+        <a-form-item field="用户名称" label="用户名:">
           <a-input v-model="updateForm.userName" placeholder="请输入用户名称" />
         </a-form-item>
+        <a-form-item field="用户性别" label="性别:">
+          <a-select
+            v-model="updateForm.userGender"
+            placeholder="请选择用户性别"
+          >
+            <a-option value="男">男</a-option>
+            <a-option value="女">女</a-option>
+          </a-select>
+        </a-form-item>
         <a-form-item field="邮箱" label="邮箱 :">
-          <a-input v-model="updateForm.email" placeholder="请输入邮箱" />
+          <a-input v-model="updateForm.userEmail" placeholder="请输入邮箱" />
         </a-form-item>
         <a-form-item field="电话" label="电话 :">
-          <a-input v-model="updateForm.phone" placeholder="请输入电话号码" />
+          <a-input
+            v-model="updateForm.userPhone"
+            placeholder="请输入电话号码"
+          />
         </a-form-item>
         <a-form-item field="userProfile" label="简介 :">
           <a-textarea
@@ -95,10 +107,12 @@ import {
   UserUpdateMyRequest,
 } from "../../../generated";
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { FileItem, Message } from "@arco-design/web-vue";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import checkAccess from "@/access/checkAccess";
+import { routes } from "@/router/routes";
 
 const router = useRouter();
 const file = ref();
@@ -106,32 +120,41 @@ const file = ref();
  * 获取用户信息
  */
 const store = useStore();
-let loginUser = store.state.user.loginUser;
+const loginUser = computed(() => {
+  return store.state.user.loginUser;
+});
 
+console.log(loginUser);
 const data = [
   {
     label: "用户名称：",
-    value: loginUser.userName,
+    value: loginUser.value.userName,
   },
   {
-    label: "账号名称：",
-    value: loginUser.userAccount,
+    label: "用户性别",
+    value: loginUser.value.userGender === "男" ? "男" : "女",
   },
+  // {
+  //   label: "账号名称：",
+  //   value: loginUser.value.userAccount,
+  // },
   {
     label: "我的简介：",
-    value: loginUser.userProfile,
+    value: loginUser.value.userProfile,
   },
   {
     label: "用户角色：",
-    value: loginUser.userRole === "user" ? "普通用户" : "管理员",
+    value: loginUser.value.userRole === "user" ? "普通用户" : "管理员",
   },
   {
     label: "邮箱：",
-    value: loginUser.email !== "" ? loginUser.email : "未填写",
+    value:
+      loginUser.value.userEmail !== "" ? loginUser.value.userEmail : "未填写",
   },
   {
     label: "电话：",
-    value: loginUser.phone !== "" ? loginUser.phone : "未填写",
+    value:
+      loginUser.value.userPhone !== "" ? loginUser.value.userPhone : "未填写",
   },
   // {
   //   label: "当前状态：",
@@ -140,11 +163,11 @@ const data = [
 
   {
     label: "创建时间：",
-    value: moment(loginUser.createTime).format("YYYY-MM-DD HH:mm:ss"),
+    value: moment(loginUser.value.createTime).format("YYYY-MM-DD HH:mm:ss"),
   },
   {
     label: "修改时间：",
-    value: moment(loginUser.updateTime).format("YYYY-MM-DD HH:mm:ss"),
+    value: moment(loginUser.value.updateTime).format("YYYY-MM-DD HH:mm:ss"),
   },
 ];
 
@@ -153,6 +176,18 @@ const updateForm = ref<UserUpdateMyRequest>({
   ...store.state.user?.loginUser,
 });
 
+const showRoutes = computed(() => {
+  return routes.filter((route) => {
+    if (route.meta?.hideInMenu) {
+      return false;
+    }
+    return checkAccess(
+      //如果直接通过复制拿到的值，不是响应式数据
+      store.state.user.loginUser,
+      route.meta?.access as string
+    );
+  });
+});
 // 从表单中获取的用户头像
 let userAvatarImg = updateForm.value.userAvatar;
 

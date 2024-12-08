@@ -5,6 +5,7 @@
 export type User = {
   createTime?: string;
   id?: number;
+  token?: string;
   isDelete?: number;
   mpOpenId?: string;
   unionId?: string;
@@ -14,5 +15,8 @@ export type User = {
   userName?: string;
   userPassword?: string;
   userProfile?: string;
+  userGender?: string;
+  userEmail?: string;
+  userPhone?: string;
   userRole?: string;
 };

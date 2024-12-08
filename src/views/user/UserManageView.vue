@@ -18,10 +18,16 @@
         />
       </a-form-item>
       <a-form-item field="title" label="电话：" tooltip="请输入电话">
-        <a-input v-model="searchParams.phone" placeholder="请输入搜索电话" />
+        <a-input
+          v-model="searchParams.userPhone"
+          placeholder="请输入搜索电话"
+        />
       </a-form-item>
       <a-form-item field="title" label="邮箱：" tooltip="请输入邮箱">
-        <a-input v-model="searchParams.email" placeholder="请输入搜索邮箱" />
+        <a-input
+          v-model="searchParams.userEmail"
+          placeholder="请输入搜索邮箱"
+        />
       </a-form-item>
       <a-form-item>
         <a-button type="outline" shape="round" status="normal" @click="doSubmit"
@@ -55,6 +61,10 @@
           <img alt="userAvatar" :src="record.userAvatar" />
         </a-avatar>
       </template>
+      <template #userGender="{ record }">
+        <a-tag v-if="record.userGender === '男'" color="blue">男</a-tag>
+        <a-tag v-if="record.userGender === '女'" color="blue">女</a-tag>
+      </template>
       <template #userRole="{ record }">
         <!-- user普通用户 admin管理员 -->
         <a-tag v-if="record.userRole === 'user'" color="arcoblue"
@@ -68,11 +78,11 @@
       <template #updateTime="{ record }">
         {{ moment(record.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
       </template>
-      <template #userState="{ record }">
-        <a-tag v-if="record.userState === '正常'" color="blue">正常</a-tag>
-        <a-tag v-if="record.userState === '注销'" color="grey">注销</a-tag>
-        <a-tag v-if="record.userState === '封号'" color="red">封号</a-tag>
-      </template>
+      <!--      <template #userState="{ record }">-->
+      <!--        <a-tag v-if="record.userState === '正常'" color="blue">正常</a-tag>-->
+      <!--        <a-tag v-if="record.userState === '注销'" color="grey">注销</a-tag>-->
+      <!--        <a-tag v-if="record.userState === '封号'" color="red">封号</a-tag>-->
+      <!--      </template>-->
       <template #optional="{ record }">
         <a-space>
           <a-button
@@ -82,7 +92,7 @@
             >修改
           </a-button>
           <a-popconfirm
-            content="确定要删除此题目吗?"
+            content="确定要删除此用户吗?"
             type="error"
             okText="是"
             cancelText="否"
@@ -134,27 +144,27 @@
         <a-form-item field="账号" label="账号 :">
           <a-input v-model="userInfo.userAccount" placeholder="请输入账号" />
         </a-form-item>
+        <a-form-item field="性别" label="性别 :">
+          <a-select
+            v-model="userInfo.userGender"
+            placeholder="请选择用户性别"
+            allow-clear
+          >
+            <a-option>男</a-option>
+            <a-option>女</a-option>
+          </a-select>
+        </a-form-item>
         <a-form-item field="邮箱" label="邮箱 :">
-          <a-input v-model="userInfo.email" placeholder="请输入邮箱" />
+          <a-input v-model="userInfo.userEmail" placeholder="请输入邮箱" />
         </a-form-item>
         <a-form-item field="电话" label="电话 :">
-          <a-input v-model="userInfo.phone" placeholder="请输入电话号码" />
-        </a-form-item>
-        <a-form-item field="用户状态" label="状态 :">
-          <a-select v-model="userInfo.userState" placeholder="请输入用户状态">
-            <a-option value="正常">正常</a-option>
-            <a-option value="注销">注销</a-option>
-            <a-option value="封号">封号</a-option>
-          </a-select>
+          <a-input v-model="userInfo.userPhone" placeholder="请输入电话号码" />
         </a-form-item>
         <a-form-item field="用户角色" label="角色 :">
           <a-select v-model="userInfo.userRole" placeholder="请输入用户角色">
             <a-option value="admin">管理员</a-option>
             <a-option value="user">普通用户</a-option>
           </a-select>
-        </a-form-item>
-        <a-form-item field="性别" label="性别 :">
-          <a-input v-model="userInfo.gender" placeholder="请输入性别" />
         </a-form-item>
         <a-form-item field="userProfile" label="简介 :">
           <a-textarea v-model="userInfo.userProfile" placeholder="请输入简介" />
@@ -188,8 +198,9 @@ const total = ref(0);
 const searchParams = ref({
   id: undefined,
   userName: "",
-  email: "",
-  phone: "",
+  userGender: "",
+  userEmail: "",
+  userPhone: "",
   pageSize: 10,
   current: 1,
 });
@@ -251,24 +262,24 @@ const columns = [
   },
   {
     title: "性别",
-    dataIndex: "gender",
+    slotName: "userGender",
     align: "center",
   },
   {
     title: "电话",
-    dataIndex: "phone",
+    dataIndex: "userPhone",
     align: "center",
   },
   {
     title: "邮箱",
-    dataIndex: "email",
+    dataIndex: "userEmail",
     align: "center",
   },
-  {
-    title: "状态",
-    slotName: "userState",
-    align: "center",
-  },
+  // {
+  //   title: "状态",
+  //   slotName: "userState",
+  //   align: "center",
+  // },
   {
     title: "角色",
     slotName: "userRole",

@@ -11,6 +11,11 @@ console.log("当前环境：", process.env.NODE_ENV, "请求地址", baseUrl);
 
 axios.interceptors.request.use(
   function (config) {
+    // console.log("user_login", localStorage.getItem("user_login"));
+    if (localStorage.getItem("user_login")) {
+      config.headers["user_login"] = localStorage.getItem("user_login");
+    }
+
     // Do something before request is sent
     return config;
   },

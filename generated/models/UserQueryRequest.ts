@@ -12,5 +12,8 @@ export type UserQueryRequest = {
   unionId?: string;
   userName?: string;
   userProfile?: string;
+  userGender?: string;
+  userEmail?: string;
+  userPhone?: string;
   userRole?: string;
 };

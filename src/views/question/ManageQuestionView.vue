@@ -8,9 +8,9 @@
       <a-form-item field="title" label="题目：" tooltip="请输入搜索的题目">
         <a-input v-model="searchParams.title" placeholder="请输入搜索题目" />
       </a-form-item>
-      <a-form-item field="title" label="用户：" tooltip="请输入用户的id">
-        <a-input v-model="searchParams.userId" placeholder="请输入搜索用户" />
-      </a-form-item>
+      <!--      <a-form-item field="title" label="用户：" tooltip="请输入用户的id">-->
+      <!--        <a-input v-model="searchParams.userId" placeholder="请输入搜索用户" />-->
+      <!--      </a-form-item>-->
       <a-form-item field="title" label="题目内容" tooltip="请输入题目内容">
         <a-input v-model="searchParams.content" placeholder="请输入题目内容" />
       </a-form-item>
@@ -93,6 +93,10 @@
           </a-tag>
         </a-space>
       </template>
+      <template #createTime="{ record }">
+        {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+      </template>
+
       <template #optional="{ record }">
         <a-space>
           <a-button shape="round" type="outline" @click="doUpdate(record)"
@@ -130,6 +134,7 @@ import {
 import message from "@arco-design/web-vue/es/message";
 
 import { useRouter } from "vue-router";
+import moment from "moment/moment";
 
 const tableRef = ref();
 
@@ -187,24 +192,25 @@ const columns = [
     title: "题目",
     dataIndex: "title",
     align: "center",
+    width: 200,
   },
   {
     title: "内容",
     dataIndex: "content",
     align: "center",
-    width: 250,
+    width: 300,
   },
   {
     title: "标签",
     slotName: "tags",
     align: "center",
-    width: 150,
+    width: 100,
   },
   {
     title: "答案",
     dataIndex: "answer",
     align: "center",
-    width: 150,
+    width: 200,
   },
   {
     title: "提交数",
@@ -223,11 +229,11 @@ const columns = [
     title: "判题用例",
     slotName: "judgeCase",
     align: "center",
-    width: 120,
+    width: 100,
   },
   {
     title: "创建时间",
-    dataIndex: "createTime",
+    slotName: "createTime",
     align: "center",
   },
   {

@@ -40,7 +40,7 @@
       >
         <a-input-tag
           v-model="form.tags"
-          placeholder="请选择标签"
+          placeholder="请输入标签"
           style="max-width: 500px"
         />
       </a-form-item>
@@ -126,7 +126,7 @@
           <a-space direction="vertical" style="min-width: 650px">
             <a-form-item
               :field="`form.judgeCase[${index}].input`"
-              :label="`第${index}个输入用例:`"
+              :label="`第${index + 1}个输入用例:`"
               :key="index"
               tooltip="主要的输入用例"
             >
@@ -137,7 +137,7 @@
             </a-form-item>
             <a-form-item
               :field="`form.judgeCase[${index}].output`"
-              :label="`第${index}个输出用例:`"
+              :label="`第${index + 1}个输出用例:`"
               :key="index"
               tooltip="主要的输出用例"
             >

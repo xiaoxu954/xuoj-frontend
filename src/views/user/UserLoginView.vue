@@ -87,15 +87,18 @@ const handleSubmit = async () => {
   //登录成功跳转到主页
   if (res.code === 0) {
     await store.dispatch("user/getLoginUser");
-    // 将token保存在localStorage中
-    // localStorage.setItem("token", res.data.token);
+
+    if (res.data?.token) {
+      localStorage.setItem("user_login", res.data);
+    }
+    console.log(res.data);
     router.push({
       path: "/",
       replace: true,
     });
     message.success("登录成功");
   } else {
-    message.error("登录失败" + res.message);
+    message.error("登录失败：" + res.message);
   }
 };
 /**

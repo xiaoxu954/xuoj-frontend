@@ -38,9 +38,13 @@
             </template>
           </template>
           <template v-else>
-            <a-avatar shape="circle" :style="{ backgroundColor: '#3370ff' }">
-              <IconUser />
-            </a-avatar>
+            <!--            <a-avatar shape="circle" :style="{ backgroundColor: '#3370ff' }">-->
+            <!--              <IconUser />-->
+            <!--            </a-avatar>-->
+
+            <div>
+              <a-button type="primary" shape="round">登录/注册</a-button>
+            </div>
           </template>
           <template #content>
             <template v-if="loginUser.userRole !== AccessEnum.NOT_LOGIN">
@@ -93,12 +97,13 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import checkAccess from "@/access/checkAccess";
 import AccessEnum from "@/access/accessEnum";
-import { UserControllerService } from "../../generated";
+import message from "@arco-design/web-vue/es/message";
 
 const router = useRouter();
 const store = useStore();
 
 const loginUser = store.state.user.loginUser;
+
 //展示在菜单的路由数组
 const visibleRoutes = computed(() => {
   return routes.filter((item, index) => {
@@ -119,8 +124,10 @@ const visibleRoutes = computed(() => {
 const selectKeys = ref(["/"]);
 
 // 用户注销
-const logout = () => {
-  UserControllerService.userLogoutUsingPost();
+
+const logout = async () => {
+  await store.dispatch("user/userLoginOut", {});
+  message.success("注销成功");
   location.reload();
 };
 

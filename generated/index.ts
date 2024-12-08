@@ -6,7 +6,6 @@ export { ApiError } from "./core/ApiError";
 export { CancelablePromise, CancelError } from "./core/CancelablePromise";
 export { OpenAPI } from "./core/OpenAPI";
 export type { OpenAPIConfig } from "./core/OpenAPI";
-
 export type { BaseResponse_boolean_ } from "./models/BaseResponse_boolean_";
 export type { BaseResponse_int_ } from "./models/BaseResponse_int_";
 export type { BaseResponse_LoginUserVO_ } from "./models/BaseResponse_LoginUserVO_";
@@ -71,3 +70,4 @@ export { PostThumbControllerService } from "./services/PostThumbControllerServic
 export { QuestionControllerService } from "./services/QuestionControllerService";
 export { UserControllerService } from "./services/UserControllerService";
 export { WxMpControllerService } from "./services/WxMpControllerService";
+export { QuestionCommentsControllerService } from "./services/QuestionCommentsControllerService";

@@ -29,6 +29,7 @@
           >刷新
         </a-button>
       </a-form-item>
+      <a-checkbox v-model="showMy">只看我的</a-checkbox>
     </a-form>
     <a-divider size="0" />
     <a-table
@@ -49,26 +50,14 @@
       @pageSizeChange="onPageSizeChange"
     >
       <template #judgeInfo="{ record }">
-        <a-space wrap>
-          <a-tag
-            size="medium"
-            v-for="(info, index) of record.judgeInfo"
-            :key="index"
-            :color="colors[index.length % colors.length]"
-          >
-            {{
-              `${
-                index === "message"
-                  ? "结果"
-                  : index === "time"
-                  ? "耗时"
-                  : "消耗内存"
-              }`
-            }}
-            {{ "：" + info }}
-          </a-tag>
-        </a-space>
+        <a-tag :color="handleColor(record.judgeInfo?.message)">
+          {{ record?.judgeInfo?.message || "编译出错" }}
+        </a-tag>
       </template>
+      <template #status="{ record }">
+        {{ record?.status === 2 ? "判题成功" : "判题失败" }}
+      </template>
+
       <template #createTime="{ record }">
         {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
       </template>
@@ -80,12 +69,16 @@
           >{{ record.questionId }}
         </a-link>
       </template>
-      <template #status="{ record }">
-        <!--        判题状态（0 - 待判题、1 - 判题中、2 - 成功、3 - 失败）-->
-        <a-tag v-if="record.status === 0" color="cyan">待判题</a-tag>
-        <a-tag v-if="record.status === 1" color="green">判题中</a-tag>
-        <a-tag v-if="record.status === 2" color="blue">成功</a-tag>
-        <a-tag v-if="record.status === 3" color="red">失败</a-tag>
+
+      <template #optional="{ record }">
+        <a-space>
+          <a-button
+            type="primary"
+            v-if="loginUser.id === record.userId"
+            @click="toQuestionPage(record)"
+            >查看详情
+          </a-button>
+        </a-space>
       </template>
     </a-table>
   </div>
@@ -100,28 +93,36 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import store from "@/store";
 
+const loginUser = store.state.user.loginUser;
 const tableRef = ref();
 const dataList = ref([]);
 const total = ref(0);
 // 搜索请求
 const searchParams = ref<QuestionSubmitQueryRequest>({
   questionId: undefined,
-  language: undefined,
+  language: "",
   pageSize: 10,
   current: 1,
 });
-
-const colors = ["orange", "green", "blue", "red"];
+const showMy = ref(false);
 
 const loadData = async () => {
-  const res = await QuestionControllerService.listQuestionSubmitByPageUsingPost(
-    {
+  let res;
+  if (showMy.value) {
+    res = await QuestionControllerService.listQuestionSubmitByPageUsingPost({
       ...searchParams.value,
       sortField: "createTime",
       sortOrder: "descend",
-    }
-  );
+    });
+  } else {
+    res = await QuestionControllerService.listQuestionSubmitByPageUsingPost({
+      ...searchParams.value,
+      sortField: "createTime",
+      sortOrder: "descend",
+    });
+  }
   if (res.code === 0) {
     dataList.value = res.data.records;
     total.value = res.data.total;
@@ -180,6 +181,10 @@ const columns = [
     slotName: "createTime",
     align: "center",
   },
+  {
+    title: "操作",
+    slotName: "optional",
+  },
 ];
 /**
  * 当前分页
@@ -202,14 +207,31 @@ const onPageSizeChange = (size: number) => {
   };
 };
 const router = useRouter();
+const handleColor = (record: any): string => {
+  if (record === "通过") {
+    return "green";
+  } else {
+    return "red";
+  }
+};
+
+// /**
+//  * 跳转到做题页面
+//  * @param question
+//  */
+// const toQuestionPage = (questionId: QuestionSubmitQueryRequest) => {
+//   router.push({
+//     path: `/question/view/${questionId.questionId}`,
+//   });
+// };
 
 /**
- * 跳转到做题页面
+ * 跳转到做题详细页面
  * @param question
  */
-const toQuestionPage = (questionId: QuestionSubmitQueryRequest) => {
+const toQuestionPage = (question: QuestionSubmitQueryRequest) => {
   router.push({
-    path: `/question/view/${questionId.questionId}`,
+    path: `/submissions/detail/${question.id}`,
   });
 };
 

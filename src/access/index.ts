@@ -1,27 +1,47 @@
 import router from "@/router";
-import store from "@/store";
 import ACCESS_ENUM from "@/access/accessEnum";
 import checkAccess from "@/access/checkAccess";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 router.beforeEach(async (to, from, next) => {
-  console.log("登陆用户信息", store.state.user.loginUser);
-  let loginUser = store.state.user.loginUser;
+  const store = useStore();
+  const loginUser = computed(() => store.state.user.loginUser);
+
+  // console.log("登陆用户信息", loginUser.value.userRole);
   // 获取后端的token
-  // console.log("token", localStorage.getItem("token"));
-  // // 如果之前没登陆过，自动登录
-  if (!loginUser || !loginUser.userRole) {
-    // 加 await 是为了等用户登录成功之后，再执行后续的代码
+
+  // console.log("user_login", localStorage.getItem("user_login"));
+  //如果用户不存在
+  if (!loginUser.value || loginUser.value.userRole === ACCESS_ENUM.NOT_LOGIN) {
+    //同步等待用户登录成功
     await store.dispatch("user/getLoginUser");
-    loginUser = store.state.user.loginUser;
   }
+  //根据路由中的meta信息进行判断，如果没有access属性那么就表示该页面无需登录
   const needAccess = (to.meta?.access as string) ?? ACCESS_ENUM.NOT_LOGIN;
+  //表明该页面需要登录
+  if (needAccess !== ACCESS_ENUM.NOT_LOGIN) {
+    //如果用户未登录
+    if (
+      !loginUser.value ||
+      loginUser.value.userRole === ACCESS_ENUM.NOT_LOGIN
+    ) {
+      store.state.visible = true;
+      next(false);
+    }
+    //如果已经登录但是权限不足
+    if (!checkAccess(loginUser.value, needAccess)) {
+      next("/noAuth");
+    }
+  }
+  next();
   // 要跳转的页面必须要登陆
   if (needAccess !== ACCESS_ENUM.NOT_LOGIN) {
     // 如果没登陆，跳转到登录页面
     if (
-      !loginUser ||
-      !loginUser.userRole ||
-      loginUser.use === ACCESS_ENUM.NOT_LOGIN
+      !loginUser.value ||
+      !loginUser.value.userRole ||
+      loginUser.value.use === ACCESS_ENUM.NOT_LOGIN
     ) {
       next(`/user/login?redirect=${to.fullPath}`);
       return;

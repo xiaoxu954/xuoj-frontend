@@ -11,6 +11,7 @@ import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
 import QuestionsView from "@/views/question/QuestionsView.vue";
 import UserManageView from "@/views/user/UserManageView.vue";
 import UserInfoView from "@/views/user/UserInfoView.vue";
+import QuestionsSubmissionsDetail from "@/views/question/QuestionsSubmissionsDetail.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -58,6 +59,9 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/question_submit",
     name: "浏览题目提交页",
     component: QuestionsSubmitView,
+    meta: {
+      access: ACCESS_ENUM.USER,
+    },
   },
   {
     path: "/question/view/:id",
@@ -67,6 +71,17 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       access: ACCESS_ENUM.USER,
       hideInMenu: true,
+    },
+  },
+  {
+    path: "/submissions/detail/:id",
+    name: "提交详情",
+    props: true,
+    component: QuestionsSubmissionsDetail,
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+      title: "提交详情",
     },
   },
   {

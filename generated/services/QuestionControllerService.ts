@@ -19,6 +19,7 @@ import type { QuestionUpdateRequest } from "../models/QuestionUpdateRequest";
 import type { CancelablePromise } from "../core/CancelablePromise";
 import { OpenAPI } from "../core/OpenAPI";
 import { request as __request } from "../core/request";
+import { BaseResponse_QuestionSubmitVO_ } from "../models/BaseResponse_QuestionSubmitVO_";
 
 export class QuestionControllerService {
   /**
@@ -235,6 +236,29 @@ export class QuestionControllerService {
       method: "POST",
       url: "/api/question/question_submit/list/page",
       body: questionQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+
+  /**
+   * getJudgeResult
+   * @param id id
+   * @returns BaseResponse_QuestionSubmitVO_ OK
+   * @throws ApiError
+   */
+  public static getJudgeResultUsingGet(
+    id?: number
+  ): CancelablePromise<BaseResponse_QuestionSubmitVO_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/question/question_submit/get/id",
+      query: {
+        id: id,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
