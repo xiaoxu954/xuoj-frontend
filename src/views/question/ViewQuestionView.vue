@@ -85,7 +85,8 @@ import {
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
-import Comment from "@/components/Comments.vue";
+import Comment from "@/components/Comment.vue";
+import { useRoute } from "vue-router";
 
 interface Props {
   id: string;
@@ -97,7 +98,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   id: () => "",
 });
-
+const route = useRoute();
+const questionId = route.params.id;
 const question = ref<QuestionVO>();
 
 const loadData = async () => {

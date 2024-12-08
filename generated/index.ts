@@ -67,7 +67,19 @@ export { FileControllerService } from "./services/FileControllerService";
 export { PostControllerService } from "./services/PostControllerService";
 export { PostFavourControllerService } from "./services/PostFavourControllerService";
 export { PostThumbControllerService } from "./services/PostThumbControllerService";
-export { QuestionControllerService } from "./services/QuestionControllerService";
 export { UserControllerService } from "./services/UserControllerService";
 export { WxMpControllerService } from "./services/WxMpControllerService";
+
+export type { BaseResponse_QuestionSubmitVO_ } from "./models/BaseResponse_QuestionSubmitVO_";
+export type { CommentAddRequest } from "./models/CommentAddRequest";
+export { ModelAndView } from "./models/ModelAndView";
+export type { QuestionComment } from "./models/QuestionComment";
+export type { QuestionCommentVO } from "./models/QuestionCommentVO";
+export type { QuestionSubmit } from "./models/QuestionSubmit";
+
+export type { View } from "./models/View";
+
+export { BasicErrorControllerService } from "./services/BasicErrorControllerService";
 export { QuestionCommentsControllerService } from "./services/QuestionCommentsControllerService";
+export { QuestionControllerService } from "./services/QuestionControllerService";
+export { QuestionInnerControllerService } from "./services/QuestionInnerControllerService";

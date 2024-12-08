@@ -243,6 +243,27 @@ export class QuestionControllerService {
       },
     });
   }
+  /**
+   * listQuestionSubmitByPage
+   * @param questionQueryRequest questionQueryRequest
+   * @returns BaseResponse_Page_QuestionSubmitVO_ OK
+   * @returns any Created
+   * @throws ApiError
+   */
+  public static listMyQuestionSubmitByPageUsingPost(
+    questionQueryRequest: QuestionSubmitQueryRequest
+  ): CancelablePromise<BaseResponse_Page_QuestionSubmitVO_ | any> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/question/question_submit/my/list/page",
+      body: questionQueryRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
 
   /**
    * getJudgeResult

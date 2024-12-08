@@ -49,7 +49,7 @@
           class="action"
           v-if="
             item.userId === loginUser.id ||
-            loginUser.userRole === Access_Enum.Admin
+            loginUser.userRole === Access_Enum.ADMIN
           "
           @click="deleteCommentById(item)"
         >
@@ -119,7 +119,7 @@
             class="action"
             v-if="
               reply.userId === loginUser.id ||
-              loginUser.userRole === Access_Enum.Admin
+              loginUser.userRole === Access_Enum.ADMIN
             "
             @click="deleteCommentById(reply)"
           >

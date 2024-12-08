@@ -111,7 +111,7 @@ const showMy = ref(false);
 const loadData = async () => {
   let res;
   if (showMy.value) {
-    res = await QuestionControllerService.listQuestionSubmitByPageUsingPost({
+    res = await QuestionControllerService.listMyQuestionSubmitByPageUsingPost({
       ...searchParams.value,
       sortField: "createTime",
       sortOrder: "descend",
